@@ -1,0 +1,183 @@
+﻿@page "/sortear"
+@using System.IO
+
+<h3 class="text-center oi-action-redo">RIFA DO LOGAN NUMEROS (1 - 200)</h3>
+
+@if (false)
+{
+    <div class="form-group">
+        <label>Informar numero sorteado</label>
+        <input @bind="numero" class="form-control" />
+    </div>
+}
+
+
+<div class="form-group text-lg-center">
+    <button @onclick="Pesquisar" class="btn btn-warning">SORTEAR</button>
+</div>
+
+<hr />
+
+
+@if (imagem is not null)
+{
+    <div class="form-group text-center">
+        <img src="@imagem" class="rounded" />
+    </div>
+
+    @if (resposta == "Numero não relacionado")
+    {
+        <div class="h2 text-white bg-dark text-center rounded text-uppercase">
+            <b>@saida</b> - @resposta
+        </div>
+    }
+    else
+    {
+        <div class="h2 text-white bg-success text-center rounded text-uppercase">
+            <b>@saida</b> - @resposta
+        </div>
+    }
+
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Numero</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (KeyValuePair<int, string> lista in dados)
+        {
+            <tr>
+                <td>@lista.Value</td>
+                <td>@lista.Key</td>
+            </tr>
+        }
+    </tbody>
+
+</table>
+
+
+@code {
+
+    private int numero;
+    private int saida;
+    private string? resposta;
+    private string? imagem;
+
+    Dictionary<int, string> dados = new()
+    {
+
+            { 118, "Climar Rodrigues" },
+            { 128, "Climar Rodrigues" },
+            { 146, "Climar Rodrigues" },
+            { 120, "Climar Rodrigues" },
+            { 110, "Climar Rodrigues" },
+            { 155, "Climar Rodrigues" },
+            { 164, "Climar Rodrigues" },
+            { 173, "Climar Rodrigues" },
+            { 182, "Climar Rodrigues" },
+            { 191, "Climar Rodrigues" },
+            { 25, "Rose" },
+            { 17, "Mirela" },
+            { 16, "Karol" },
+            { 22, "Gohan filho da Karol" },
+            { 8, "Antonio" },
+            { 5, "Antonio" },
+            { 14, "Francisca" },
+            { 1, "Francisca" },
+            { 55, "Francisca" },
+            { 24, "Francisca" },
+            { 165, "Luis" },
+            { 21, "Levi" },
+            { 4, "Danilo" },
+            { 7, "Danilo" },
+            { 10, "Danilo" },
+            { 26, "Danilo" },
+            { 28, "Juliana Freire" },
+            { 186, "Maria" },
+            { 69, "Maria" },
+            { 37, "Vânia" },
+            { 47, "Tecyane" },
+            { 13, "Daiane" },
+            { 200, "Fernando Victor" },
+            { 6, "Israel" },
+            { 116, "Israel" },
+            { 53, "Euleno" },
+            { 19, "Beatriz Araujo" },
+            { 143, "Fabiano" },
+            { 93, "Fernando" },
+            { 104, "Fernando" },
+            { 115, "Fernando" },
+            { 126, "Fernando" },
+            { 137, "Fernando" },
+            { 148, "Fernando" },
+            { 159, "Fernando" },
+            { 170, "Fernando" },
+            { 44, "Fernando" },
+            { 20, "Fernando" },
+            { 199, "Adriano Fialho" },
+            { 198, "Adriano Fialho" },
+            { 197, "Adriano Fialho" },
+            { 196, "Adriano Fialho" },
+            { 195, "Adriano Fialho" }
+
+        };
+
+    void Pesquisar()
+    {
+        Random rn = new Random();
+        numero = rn.Next(1, 200);
+
+
+
+        if (dados.ContainsKey(numero))
+        {
+            resposta = dados[numero];
+            imagem = "img/baloes.png";
+            saida = numero;
+
+        }
+        else
+        {
+            resposta = "Numero não relacionado";
+            imagem = "img/botao-x.png";
+            saida = numero;
+        }
+
+    }
+
+    private static Dictionary<int, string> Carrega()
+    {
+        Dictionary<int, string> comp = new Dictionary<int, string>();
+        string caminho = "txt/dados.txt";
+
+        try
+        {
+
+
+            using (StreamReader rs = File.OpenText(caminho))
+            {
+                while (!rs.EndOfStream)
+                {
+                    string[] linha = rs.ReadLine().Split(";");
+                    comp[int.Parse(linha[0])] = linha[1];
+                }
+
+            }
+
+            return comp;
+        }
+        catch (Exception e)
+        {
+            comp[0] = e.Message;
+            return comp;
+        }
+
+
+    }
+
+
+}
