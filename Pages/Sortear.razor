@@ -1,7 +1,8 @@
 ﻿@page "/sortear"
 @using System.IO
+@using System.Linq
 
-<h3 class="text-center oi-action-redo">RIFA DO LOGAN NUMEROS (1 - 200)</h3>
+<h3 class="text-center oi-account-login">RIFA DO LOGAN NUMEROS (1 - 200)</h3>
 
 @if (false)
 {
@@ -36,11 +37,54 @@
         <div class="h2 text-white bg-success text-center rounded text-uppercase">
             <b>@saida</b> - @resposta
         </div>
+
+        <div class="text-white bg-info text-center rounded">
+            total de números sorteados - <b>@lista.Count()</b>
+        </div>
+
     }
+
+    <div class="table-responsive-sm" style="overflow-y: auto; max-height: 200px;">
+        <table class="table table-sm table-striped">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Num.</th>
+                    <th>Hora</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var lin in lista.OrderByDescending(x => x.Id))
+                {
+                        @if (sorteado == lin.Numero)
+                        {
+                            <tr class="table-warning">
+                                <td>@lin.Id</td>
+                                <td>
+                                    @lin.Numero
+                                </td>
+                                <td>@lin.Periodo.ToLongTimeString()</td>
+                            </tr>
+                        }
+                        else
+                        {
+                            <tr>
+                                <td>@lin.Id</td>
+                                <td>
+                                    @lin.Numero
+                                </td>
+                                <td>@lin.Periodo.ToLongTimeString()</td>
+                            </tr>
+                            
+                        }
+                }
+            </tbody>
+        </table>
+    </div>
 
 }
 
-<table class="table">
+<table class="table table-sm">
     <thead>
         <tr>
             <th>Nome</th>
@@ -64,88 +108,106 @@
 
     private int numero;
     private int saida;
+    private int sorteado = 0;
     private string? resposta;
     private string? imagem;
+    private int id = 0;
+    List<Ordem> lista = new List<Ordem>();
 
     Dictionary<int, string> dados = new()
     {
 
-            { 118, "Climar Rodrigues" },
-            { 128, "Climar Rodrigues" },
-            { 146, "Climar Rodrigues" },
-            { 120, "Climar Rodrigues" },
-            { 110, "Climar Rodrigues" },
-            { 155, "Climar Rodrigues" },
-            { 164, "Climar Rodrigues" },
-            { 173, "Climar Rodrigues" },
-            { 182, "Climar Rodrigues" },
-            { 191, "Climar Rodrigues" },
-            { 25, "Rose" },
-            { 17, "Mirela" },
-            { 16, "Karol" },
-            { 22, "Gohan filho da Karol" },
-            { 8, "Antonio" },
-            { 5, "Antonio" },
-            { 14, "Francisca" },
-            { 1, "Francisca" },
-            { 55, "Francisca" },
-            { 24, "Francisca" },
-            { 165, "Luis" },
-            { 21, "Levi" },
-            { 4, "Danilo" },
-            { 7, "Danilo" },
-            { 10, "Danilo" },
-            { 26, "Danilo" },
-            { 28, "Juliana Freire" },
-            { 186, "Maria" },
-            { 69, "Maria" },
-            { 37, "Vânia" },
-            { 47, "Tecyane" },
-            { 13, "Daiane" },
-            { 200, "Fernando Victor" },
-            { 6, "Israel" },
-            { 116, "Israel" },
-            { 53, "Euleno" },
-            { 19, "Beatriz Araujo" },
-            { 143, "Fabiano" },
-            { 93, "Fernando" },
-            { 104, "Fernando" },
-            { 115, "Fernando" },
-            { 126, "Fernando" },
-            { 137, "Fernando" },
-            { 148, "Fernando" },
-            { 159, "Fernando" },
-            { 170, "Fernando" },
-            { 44, "Fernando" },
-            { 20, "Fernando" },
-            { 199, "Adriano Fialho" },
-            { 198, "Adriano Fialho" },
-            { 197, "Adriano Fialho" },
-            { 196, "Adriano Fialho" },
-            { 195, "Adriano Fialho" }
+        { 118, "Climar Rodrigues" },
+        { 128, "Climar Rodrigues" },
+        { 146, "Climar Rodrigues" },
+        { 120, "Climar Rodrigues" },
+        { 110, "Climar Rodrigues" },
+        { 155, "Climar Rodrigues" },
+        { 164, "Climar Rodrigues" },
+        { 173, "Climar Rodrigues" },
+        { 182, "Climar Rodrigues" },
+        { 191, "Climar Rodrigues" },
+        { 25, "Rose" },
+        { 17, "Mirela" },
+        { 16, "Karol" },
+        { 22, "Gohan filho da Karol" },
+        { 8, "Antonio" },
+        { 5, "Antonio" },
+        { 14, "Francisca" },
+        { 1, "Francisca" },
+        { 55, "Francisca" },
+        { 24, "Francisca" },
+        { 165, "Luis" },
+        { 21, "Levi" },
+        { 4, "Danilo" },
+        { 7, "Danilo" },
+        { 10, "Danilo" },
+        { 26, "Danilo" },
+        { 28, "Juliana Freire" },
+        { 186, "Maria" },
+        { 69, "Maria" },
+        { 37, "Vânia" },
+        { 47, "Tecyane" },
+        { 13, "Daiane" },
+        { 200, "Fernando Victor" },
+        { 6, "Israel" },
+        { 116, "Israel" },
+        { 53, "Euleno" },
+        { 19, "Beatriz Araujo" },
+        { 143, "Fabiano" },
+        { 93, "Fernando" },
+        { 104, "Fernando" },
+        { 115, "Fernando" },
+        { 126, "Fernando" },
+        { 137, "Fernando" },
+        { 148, "Fernando" },
+        { 159, "Fernando" },
+        { 170, "Fernando" },
+        { 44, "Fernando" },
+        { 20, "Fernando" },
+        { 199, "Adriano Fialho" },
+        { 198, "Adriano Fialho" },
+        { 197, "Adriano Fialho" },
+        { 196, "Adriano Fialho" },
+        { 195, "Adriano Fialho" }
 
-        };
+    };
 
     void Pesquisar()
     {
         Random rn = new Random();
         numero = rn.Next(1, 200);
 
+        Ordem ver = lista.Find(x => x.Numero == numero);
 
-
-        if (dados.ContainsKey(numero))
+        if (ver != null)
         {
-            resposta = dados[numero];
-            imagem = "img/baloes.png";
-            saida = numero;
-
+            return;
         }
         else
         {
-            resposta = "Numero não relacionado";
-            imagem = "img/botao-x.png";
-            saida = numero;
+            id++;
+            lista.Add(new Ordem { Id = id, Numero = numero, Periodo = DateTime.Now});
+
+
+            if (dados.ContainsKey(numero))
+            {
+                resposta = dados[numero];
+                imagem = "img/baloes.png";
+                saida = numero;
+                sorteado = numero;
+
+            }
+            else
+            {
+                resposta = "Numero não relacionado";
+                imagem = "img/botao-x.png";
+                saida = numero;
+            }
+
         }
+
+
 
     }
 
@@ -177,6 +239,12 @@
         }
 
 
+    }
+    class Ordem
+    {
+        public int Id { get; set; }
+        public int Numero { get; set; }
+        public DateTime Periodo { get; set; }
     }
 
 
